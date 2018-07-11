@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log("DOM fully loaded and parsed");
-
 
   /*--------------------------- VARIABLES -----------------------------*/
 
@@ -37,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // update the activeTabEl and add active style
     activeTabEl = tabElList[activeIndexInStack];
     tabElList[activeIndexInStack].classList.add("active");
-    document.querySelector(".active").Focus();
+    yAdjust();
   }
 
   function moveUp(){
@@ -50,7 +48,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // update the activeTabEl and add active style
     activeTabEl = tabElList[activeIndexInStack];
     tabElList[activeIndexInStack].classList.add("active");
+    yAdjust();
+  }
 
+  function yAdjust(){
+    let yScroll = window.pageYOffset;
+    if(activeIndexInStack > 15 && yScroll < (activeIndexInStack - 15) * 35){
+      window.scrollTo(0, (activeIndexInStack - 15) * 35);
+    }
+    if(activeIndexInStack <= 15 && yScroll > activeIndexInStack * 35){
+      window.scrollTo(0, activeIndexInStack * 35);
+    }
   }
 
   function changeActiveTabAndClose(){
@@ -65,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-
 
   function populateTabs(){
     for(let i = tabs.length-1; i >= 0; i--){
@@ -106,11 +113,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
-  
 
   /*--------------------------- KEY BINDINGS & MOUSE BEHAVIOR -----------------------------*/
 
   document.onkeydown = function(e){
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
     switch (e.keyCode) {
       case 81: //Q
         moveDown();
